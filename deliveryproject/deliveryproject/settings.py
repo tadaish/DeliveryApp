@@ -124,3 +124,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'deliveryapp.User'
+MEDIA_ROOT = '%s/deliveryapp/static' % BASE_DIR

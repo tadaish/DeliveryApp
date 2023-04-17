@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     avatar = models.ImageField(upload_to='users/%Y/%m', null=True)
+    is_shipper = models.BooleanField(default=False, verbose_name='shipper')
+    is_client = models.BooleanField(default=False, verbose_name='client')
 
     def __str__(self):
         return self.username
@@ -11,21 +13,21 @@ class User(AbstractUser):
 
 class Shipper(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    fullname = models.CharField(max_length=50)
     id = models.CharField(max_length=12)
-    birthday = models.DateField()
+    phone = models.CharField(max_length=10)
+    birthday = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return self.fullname
+        return self.user.get_full_name()
 
 
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    fullname = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
+    phone = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.fullname
+        return self.user.get_full_name()
 
 
 class Order(models.Model):
