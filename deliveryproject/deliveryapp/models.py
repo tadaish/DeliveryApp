@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
+    fullname = models.CharField(max_length=50, null=True)
     avatar = models.ImageField(upload_to='users/%Y/%m', null=True)
     is_shipper = models.BooleanField(default=False, verbose_name='shipper')
     is_client = models.BooleanField(default=False, verbose_name='client')
@@ -18,7 +19,7 @@ class Shipper(models.Model):
     birthday = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return self.user.get_full_name()
+        return self.user.fullname
 
 
 class Client(models.Model):
@@ -27,7 +28,7 @@ class Client(models.Model):
     phone = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.user.get_full_name()
+        return self.user.fullname
 
 
 class Order(models.Model):
@@ -38,6 +39,12 @@ class Order(models.Model):
     ]
 
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    order_value = models.DecimalField(max_digits=10, decimal_places=2)
+    from_address = models.TextField(null=True, verbose_name='from', )
+    to_address = models.TextField(null=True, verbose_name='to')
+    description = models.CharField(max_length=500)
+    order_value = models.DecimalField(max_digits=10, decimal_places=2, null=True, verbose_name='value')
     created_date = models.DateTimeField(auto_now_add=True)
-    status = models.IntegerField(choices=STATUS_OF_ORDER)
+    status = models.SmallIntegerField(choices=STATUS_OF_ORDER)
+
+    def __str__(self):
+        return self.user.fullname
