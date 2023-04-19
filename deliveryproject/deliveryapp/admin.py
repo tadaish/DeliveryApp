@@ -12,43 +12,17 @@ class ShipperForm(forms.ModelForm):
         fields = '__all__'
 
 
-class ShipperAdmin(admin.ModelAdmin):
-    list_display = ['fullname', 'id', 'phone', 'email', 'birthday']
-    search_fields = ['fullname']
-    form = ShipperForm
-
-    def fullname(self, obj):
-        return obj.user.fullname
-
-    def email(self, obj):
-        return obj.user.email
-
-
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'password', 'fullname', 'email', 'is_superuser', 'is_client', 'is_shipper',
-                  'user_permissions', 'last_login', 'date_joined']
+        fields = ['username', 'password', 'full_name', 'email', 'is_superuser', 'is_shipper', 'is_client',
+                  'user_permissions', 'last_login', 'date_joined', 'avatar']
 
 
-class UserAdmin(admin.ModelAdmin):
-    list_display = ['username', 'fullname', 'email', 'date_joined', 'is_superuser', 'is_client',
-                    'is_shipper']
-    search_fields = ['username', 'first_name', 'last_name']
-    list_filter = ['date_joined', 'is_superuser', 'is_client', 'is_shipper']
-
-    form = UserForm
-
-
-class ClientAdmin(admin.ModelAdmin):
-    list_display = ['fullname', 'email', 'phone', 'address']
-    search_fields = ['fullname']
-
-    def fullname(self, obj):
-        return obj.user.fullname
-
-    def email(self, obj):
-        return obj.user.email
+class ClientForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = '__all__'
 
 
 class OrderForm(forms.ModelForm):
@@ -59,6 +33,39 @@ class OrderForm(forms.ModelForm):
         fields = '__all__'
 
 
+class ShipperAdmin(admin.ModelAdmin):
+    list_display = ['full_name', 'id', 'phone', 'email', 'birthday']
+    search_fields = ['full_name']
+    form = ShipperForm
+
+    def full_name(self, obj):
+        return obj.user.fullname
+
+    def email(self, obj):
+        return obj.user.email
+
+
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['username', 'full_name', 'email', 'date_joined', 'is_superuser', 'is_client', 'is_shipper']
+    search_fields = ['username', 'full_name']
+    list_filter = ['date_joined', 'is_superuser', 'is_client', 'is_shipper']
+
+    form = UserForm
+
+
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ['full_name', 'email', 'phone', 'address']
+    search_fields = ['full_name']
+
+    form = ClientForm
+
+    def full_name(self, obj):
+        return obj.user.full_name
+
+    def email(self, obj):
+        return obj.user.email
+
+
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['pk', 'client', 'from_address', 'to_address', 'order_value', 'created_date', 'status']
     search_fields = ['pk', 'client']
@@ -66,7 +73,7 @@ class OrderAdmin(admin.ModelAdmin):
     form = OrderForm
 
     def client(self, obj):
-        return self.user.fullname
+        return self.user.full_name
 
 
 admin.site.register(User, UserAdmin)

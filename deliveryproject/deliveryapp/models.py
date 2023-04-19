@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    fullname = models.CharField(max_length=50, null=True)
+    full_name = models.CharField(max_length=50, null=True, verbose_name='fullname')
     avatar = models.ImageField(upload_to='users/%Y/%m', null=True)
     is_shipper = models.BooleanField(default=False, verbose_name='shipper')
     is_client = models.BooleanField(default=False, verbose_name='client')
@@ -19,16 +19,16 @@ class Shipper(models.Model):
     birthday = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return self.user.fullname
+        return self.user.full_name
 
 
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    address = models.TextField()
+    address = models.CharField(max_length=100)
     phone = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.user.fullname
+        return self.user.full_name
 
 
 class Order(models.Model):
@@ -39,12 +39,12 @@ class Order(models.Model):
     ]
 
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    from_address = models.TextField(null=True, verbose_name='from', )
-    to_address = models.TextField(null=True, verbose_name='to')
-    description = models.CharField(max_length=500)
+    from_address = models.CharField(max_length=200, null=True, verbose_name='from', )
+    to_address = models.CharField(max_length=200, null=True, verbose_name='to')
+    description = models.CharField(max_length=200)
     order_value = models.DecimalField(max_digits=10, decimal_places=2, null=True, verbose_name='value')
     created_date = models.DateTimeField(auto_now_add=True)
     status = models.SmallIntegerField(choices=STATUS_OF_ORDER)
 
     def __str__(self):
-        return self.user.fullname
+        return self.user.full_name
