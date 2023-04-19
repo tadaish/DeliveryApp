@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class User(AbstractUser):
@@ -48,3 +50,14 @@ class Order(models.Model):
 
     def __str__(self):
         return self.user.full_name
+
+
+@receiver(post_save, sender=User)
+def add_client(sender, instance, created, **kwargs):
+    if created:
+        if instance.is_client:
+            client = Client(user=instance)
+            client.save()
+        if instance.is_shipper:
+            shipper = Shipper(user=instance)
+            shipper.save()

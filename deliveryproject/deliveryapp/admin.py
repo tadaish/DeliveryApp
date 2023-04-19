@@ -39,7 +39,7 @@ class ShipperAdmin(admin.ModelAdmin):
     form = ShipperForm
 
     def full_name(self, obj):
-        return obj.user.fullname
+        return obj.user.full_name
 
     def email(self, obj):
         return obj.user.email
